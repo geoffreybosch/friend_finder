@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+
+    <h1>Friend Finder</h1>
+
+
+    <ul></ul>
+    <br>
+    <br>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var friendNum = []
+        var friendName = []
+        var questionNum = []
+        var questionName = []
+        displayBooks();
+
+        function updateFriends() {
+            $.ajax({
+                url: '/friends',
+                method: 'GET'
+            }).then(function (res) {
+                for (var i = 0; i < res.length; i++) {
+                    friendNum.push(res[i].id);
+                    friendName.push(res[i].name);
+                    console.log("added id to friendNum: " + res[i].id)
+                    console.log("added name to friendName: " + res[i].name)
+                }
+                console.log(friendName)
+                console.log(friendNum)
+
+            })
+        }
+        function updateQuestions() {
+            $.ajax({
+                url: '/questions',
+                method: 'GET'
+            }).then(function (res) {
+                for (var i = 0; i < res.length; i++) {
+                    questionNum.push(res[i].id);
+                    questionName.push(res[i].ques);
+                    console.log("added id to friendNum: " + res[i].id)
+                    console.log("added name to friendName: " + res[i].ques)
+                }
+                console.log(questionNum)
+                console.log(questionName)
+            })
+        }
+
+        function displayBooks() {
+            $('ul').empty();
+            updateFriends();
+            updateQuestions();
+
+            $.ajax({
+                url: '/scores',
+                method: 'GET'
+            }).then(function (res) {
+                for (var f = 0; f < friendNum.length; f++) {
+                    // debugger;
+                    var br = $('<br>')
+                    for (var i = 0; i < res.length; i++) {
+                        if (res[i]['friend_id'] == friendNum[f]) {
+                            var remain = (i % questionNum.length)
+                            var li = $('<li>');
+                            li.text("Friend:" + friendName[f] + "  Question:" + questionName[remain] + "  Answer:" + res[i]['answer']);
+
+                            $('ul').append(li);
+                        }
+                        $('ul').append(br);
+                    }
+                    $('ul').append(br);
+                }
+
+            }
+            )
+        }
+    </script>
+</body>
+
+</html>

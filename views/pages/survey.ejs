@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+
+    <form id="insertForm" action="/insert" method="POST">
+
+        <!-- when you hit the button 
+
+			it makes a req.query object 
+
+				the keys are the name attributes of the form elements
+
+					the values of those keys are whatever the user puts down -->
+
+        <input type="text" name="book_name" placeholder="put a name">
+        <button>insert a book</button>
+    </form>
+
+
+
+    <h2>Survey</h2>
+    <p>Answer the questions below, 1-10(10 being that you agree, 1 being you disagree.</p>
+    <ul></ul>
+
+    <form id="updateForm" action="/update?_method=PUT" method="POST">
+
+        <!-- when you hit the button 
+
+			it makes a req.query object 
+
+				the keys are the name attributes of the form elements
+
+					the values of those keys are whatever the user puts down -->
+
+        <input type="text" name="book_name" placeholder="put new book name">
+        <input type="text" name="id" placeholder="put in a book id">
+        <button>update the book</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        survey();
+
+        // $("#insertForm button").on('click', insertBook);
+        // $("#updateForm button").on('click', updateBook);
+
+        // $(document).on('click', ".deleteForm button", deleteBook);
+
+        function survey() {
+            $('ul').empty();
+            $.ajax({
+                url: '/questions',
+                method: 'GET'
+            }).then(function (res) {
+
+                for (var i = 0; i < res.length; i++) {
+                    var li = $('<li>');
+                    li.text("#:" + res[i]['id'] + "  " + res[i]['ques']);
+
+                    var f = $('<form>')
+                    f.attr('class', 'deleteForm')
+                    f.attr('action', '/delete?_method=DELETE');
+                    f.attr('method', 'POST');
+
+                    var inp = $('<input>');
+                    inp.attr('type', 'hidden');
+                    inp.attr('name', 'id');
+                    inp.attr('value', res[i].id)
+
+                    var b = $('<input>');
+                    b.attr('type', 'number');
+                    b.attr('name', 'quantity');
+                    b.attr('min', '1');
+                    b.attr('max', '10');
+                    b.attr('step', '1')
+
+                    // <input type="number" name="quantity" min="1" max="5">
+
+                    f.append(inp, b);
+
+                    li.append(f)
+                    $('ul').append(li);
+                }
+                var na =
+                    $('ul').prepend(na);
+                // $('div').text(JSON.stringify(res));
+            })
+        }
+
+        function insertBook() {
+            event.preventDefault();
+
+            var pn = $("#insertForm input[name=book_name]").val();
+
+            // in the data: object, I needed to put book_name as the key because we need req.body.book_name to exist
+            $.ajax({
+                url: '/insert',
+                method: 'POST',
+                data: { book_name: pn }
+            }).then(function (res) {
+                survey();
+            });
+        }
+
+        // function updateBook() {
+        //     event.preventDefault();
+
+        //     var $pni = $("#updateForm input[name=book_name]")
+        //     var $iddi = $("#updateForm input[name=id]")
+
+        //     var pn = $pni.val();
+        //     var idd = $iddi.val();
+
+
+        //     // in the data: object, I needed to put book_name as the key because we need req.body.book_name to exist
+        //     $.ajax({
+        //         url: '/update?_method=PUT',
+        //         method: 'POST',
+        //         data: {
+        //             book_name: pn,
+        //             id: idd
+        //         }
+        //     }).then(function (res) {
+        //         survey();
+        //         $pni.val("")
+        //         $iddi.val("")
+        //     });
+        // }
+
+        // function deleteBook() {
+        //     event.preventDefault();
+
+        //     var $iddi = $(this).parent().children().eq(0);
+
+        //     var idd = $iddi.val();
+
+        //     // in the data: object, I needed to put book_name as the key because we need req.body.book_name to exist
+        //     $.ajax({
+        //         url: '/delete?_method=DELETE',
+        //         method: 'POST',
+        //         data: {
+        //             id: idd
+        //         }
+        //     }).then(function (res) {
+        //         survey();
+        //     });
+        // }
+
+
+
+
+
+    </script>
+</body>
+
+</html>
