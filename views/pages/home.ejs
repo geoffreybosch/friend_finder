@@ -2,20 +2,22 @@
 <html>
 
 <head>
-    <title></title>
+    <title>FF: Leaderboard</title>
 </head>
 
 <body>
+    <% include ../partials/nav %>
+    <h1>Friend Finder <br>Leader Board</h1>
 
-    <h1>Friend Finder</h1>
-
-
+    <div id=leaderboard></div>
     <ul></ul>
     <br>
     <br>
 
 
-
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script type="text/javascript">
@@ -69,17 +71,28 @@
                 for (var f = 0; f < friendNum.length; f++) {
                     // debugger;
                     var br = $('<br>')
+                    var liF = $('<li>');
+                    liF.text("Name: " + friendName[f]);
+                    $('#leaderboard').append(liF);
+
                     for (var i = 0; i < res.length; i++) {
+
                         if (res[i]['friend_id'] == friendNum[f]) {
                             var remain = (i % questionNum.length)
-                            var li = $('<li>');
-                            li.text("Friend:" + friendName[f] + "  Question:" + questionName[remain] + "  Answer:" + res[i]['answer']);
 
-                            $('ul').append(li);
+                            var liQ = $('<li>');
+                            liQ.text("Question: " + questionName[remain]);
+                            var liA = $('<li>');
+                            liA.text("Answer: " + res[i]['answer']);
+
+                            var fA = $('<ul>')
+                            fA.append(liQ, liA)
+
+                            $('#leaderboard').append(fA);
                         }
-                        $('ul').append(br);
+                        $('#leaderboard').append(br);
                     }
-                    $('ul').append(br);
+                    $('#leaderboard').append(br);
                 }
 
             }

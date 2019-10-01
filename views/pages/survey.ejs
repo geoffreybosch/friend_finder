@@ -2,20 +2,24 @@
 <html>
 
 <head>
-    <title></title>
+    <title>FF: Survey</title>
 </head>
 
 <body>
-
+    <% include ../partials/nav %>
 
 
 
     <h2>Survey</h2>
-    <p>Answer the questions below, 1-10(10 being that you agree, 1 being you disagree)</p>
+    <h3>Answer the questions below, 1-10</h3>
+    <p>(10 being that you agree, 1 being you disagree)</p>
+    <br><br>
 
-    <ul></ul>
+    <div id="questions"></div>
 
-
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script type="text/javascript">
@@ -27,51 +31,72 @@
                 url: '/questions',
                 method: 'GET'
             }).then(function (res) {
+                var bf = $('<form>')
 
-                for (var i = 0; i < res.length; i++) {
-                    var br = $('<br>')
-                    var li = $('<li>');
-                    li.text("#:" + res[i]['id'] + "  " + res[i]['ques']);
-
-                    var f = $('<form>')
-                    f.attr('class', 'deleteForm')
-                    f.attr('action', '/delete?_method=DELETE');
-                    f.attr('method', 'POST');
-
-                    var inp = $('<input>');
-                    inp.attr('type', 'hidden');
-                    inp.attr('name', 'id');
-                    inp.attr('value', res[i].id)
-
-                    // <input type="number" name="quantity" min="1" max="5">
-                    var b = $('<input>');
-                    b.attr('type', 'number');
-                    b.attr('name', 'quantity');
-                    b.attr('min', '1');
-                    b.attr('max', '10');
-                    b.attr('step', '1')
-
-                    f.append(inp, b);
-
-                    li.append(f)
-                    $('ul').append(li);
-                }
-                var br = $('<br>')
-                var p = $('<p>')
-                p.text('Name')
-                var s = $('<button>');
-                s.attr('type', 'submit');
-                s.text('Submit')
-
+                var p = $('<li>');
+                p.text('Name');
 
                 var na = $('<input>');
                 na.attr('type', 'text');
-                na.attr('name', 'name')
-                na.attr('placeholder', 'First Name')
+                na.attr('name', 'name');
+                na.attr('placeholder', 'First Name');
 
+                p.append(na)
+                $(bf).append(p);
+                for (var i = 0; i < res.length; i++) {
+                    var li = $('<li>');
+                    li.text("#:" + res[i]['id'] + "  " + res[i]['ques']);
 
-                $('ul').prepend(p, br, na, br);
-                $('ul').append(br, s);
+                    // <option value="audi">Audi</option>
+                    // <input type="number" name="answer" min="1" max="5">
+                    var b = $('<select>');
+                    b.attr('type', 'number');
+                    b.attr('name', 'answer');
+                    b.attr('value', res[i].id)
+                    var o1 = $('<option>');
+                    o1.attr('value', '1');
+                    o1.text("1");
+                    var o2 = $('<option>');
+                    o2.attr('value', '2');
+                    o2.text("2");
+                    var o3 = $('<option>');
+                    o3.attr('value', '3');
+                    o3.text("3");
+                    var o4 = $('<option>');
+                    o4.attr('value', '4');
+                    o4.text("4");
+                    var o5 = $('<option>');
+                    o5.attr('value', '5');
+                    o5.text("5");
+                    var o6 = $('<option>');
+                    o6.attr('value', '6');
+                    o6.text("6");
+                    var o7 = $('<option>');
+                    o7.attr('value', '7');
+                    o7.text("7");
+                    var o8 = $('<option>');
+                    o8.attr('value', '8');
+                    o8.text("8");
+                    var o9 = $('<option>');
+                    o9.attr('value', '9');
+                    o9.text("9");
+                    var o10 = $('<option>');
+                    o10.attr('value', '10');
+                    o10.text("10");
+                    b.append(o1, o2, o3, o4, o5, o6, o7, o8, o9, o10);
+
+                    li.append(b);
+                    bf.append(li);
+                }
+                var br = $('<br>')
+
+                var s = $('<button>');
+                s.attr('type', 'submit');
+                s.text('Submit');
+
+                $(bf).append(br, s);
+
+                $('#questions').append(bf)
                 // $('div').text(JSON.stringify(res));
             })
         }
