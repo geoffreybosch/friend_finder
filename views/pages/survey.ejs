@@ -32,13 +32,14 @@
                 method: 'GET'
             }).then(function (res) {
                 var bf = $('<form>')
+                bf.attr('id', 'survey')
 
                 var p = $('<li>');
                 p.text('Name');
 
                 var na = $('<input>');
                 na.attr('type', 'text');
-                na.attr('name', 'name');
+                na.attr('name', 'userName');
                 na.attr('placeholder', 'First Name');
 
                 p.append(na)
@@ -101,6 +102,21 @@
             })
         }
 
+        function insertBook() {
+            event.preventDefault();
+
+            var uN = $("#survey input[name=userName]").val();
+
+            // in the data: object, I needed to put book_name as the key because we need req.body.book_name to exist
+
+            $.ajax({
+                url: '/insert',
+                method: 'POST',
+                data: { name: uN }
+            }).then(function (res) {
+                survey();
+            });
+        }
 
 
 

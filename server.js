@@ -90,6 +90,19 @@ app.get('/friends', function (req, res) {
     });
 });
 
+app.post('/insert', function (req, res) {
+
+    if (req.body.name.length > 1) {
+        connection.query('INSERT INTO friends (name) VALUES (?)', [req.body.name], function (error, results, fields) {
+            if (error) res.send(error)
+            else res.redirect('/');
+        });
+    } else {
+        res.send('invalid name')
+    }
+
+
+});
 
 app.listen(3000, function () {
     console.log('listening on 3000');
