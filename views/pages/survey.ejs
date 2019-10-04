@@ -25,6 +25,8 @@
     <script type="text/javascript">
         survey();
 
+        $("#surveySubmit button").on('click', submitSurvey);
+
         function survey() {
             $('ul').empty();
             $.ajax({
@@ -47,9 +49,9 @@
                 for (var i = 0; i < res.length; i++) {
                     var li = $('<li>');
                     li.text("#:" + res[i]['id'] + "  " + res[i]['ques']);
+                    // li.attr('')
 
                     // <option value="audi">Audi</option>
-                    // <input type="number" name="answer" min="1" max="5">
                     var b = $('<select>');
                     b.attr('type', 'number');
                     b.attr('name', 'answer');
@@ -92,6 +94,7 @@
                 var br = $('<br>')
 
                 var s = $('<button>');
+                s.attr('id', 'surveySubmit')
                 s.attr('type', 'submit');
                 s.text('Submit');
 
@@ -102,17 +105,33 @@
             })
         }
 
-        function insertBook() {
+
+        // <select type="number" name="answer" value="4"></select>
+        function submitSurvey() {
             event.preventDefault();
 
-            var uN = $("#survey input[name=userName]").val();
+            var n = $("#survey input[name=userName]").val();
+            var q1 = $("#survey select[value=1]").val();
+            var q2 = $("#survey select[value=2]").val();
+            var q3 = $("#survey select[value=3]").val();
+            var q4 = $("#survey select[value=4]").val();
+            var f = $("#survey input[name=userName]").val();
+            var a = $("#survey input[name=userName]").val();
 
             // in the data: object, I needed to put book_name as the key because we need req.body.book_name to exist
 
             $.ajax({
                 url: '/insert',
                 method: 'POST',
-                data: { name: uN }
+                data: {
+                    name: n,
+                    question1: q1,
+                    question2: q2,
+                    question3: q3,
+                    question4: q4,
+                    friend: f,
+                    answer: a
+                }
             }).then(function (res) {
                 survey();
             });

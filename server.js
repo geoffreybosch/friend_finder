@@ -95,7 +95,10 @@ app.post('/insert', function (req, res) {
     if (req.body.name.length > 1) {
         connection.query('INSERT INTO friends (name) VALUES (?)', [req.body.name], function (error, results, fields) {
             if (error) res.send(error)
-            else res.redirect('/');
+            else connection.query('INSERT INTO scores (question_id, friend_id, answer) VALUES (?, ?, ?)', [req.body.question1, req.body.question2, req.body.question3, req.body.question4, req.body.friend, req.body.answer], function (error, results, fields) {
+                if (error) res.send(error)
+                else res.redirect('/');
+            });
         });
     } else {
         res.send('invalid name')
